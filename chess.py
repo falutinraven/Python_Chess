@@ -21,27 +21,19 @@ def main():
             continue
 
         # TODO: put is possible move in attempt move in move_validation module.
-        if move_validation.is_possible_move(game_board, *move_info):
-            if whites_turn:
-
-                successful_move = move_validation.attempt_move(
-                    white_king_info,
-                    game_board,
-                    *move_info)
-
-            if not whites_turn:
-
-                successful_move = move_validation.attempt_move(
-                    black_king_info,
-                    game_board,
-                    *move_info)
-
-            if not successful_move:
-                print("Prevent check to make move valid, try again")
-                continue
-
+        if whites_turn:
+            successful_move = move_validation.attempt_move(
+                white_king_info,
+                game_board,
+                *move_info)
         else:
-            print("not a valid move")
+            successful_move = move_validation.attempt_move(
+                black_king_info,
+                game_board,
+                *move_info)
+
+        if not successful_move:
+            print("invalid move, try again")
             continue
 
         if move_info[-1] == 'k':

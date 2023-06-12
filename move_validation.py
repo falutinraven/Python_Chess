@@ -214,6 +214,9 @@ def attempt_move(king_info, game_board, *move_info):
        move_info = [old_rank, new_rank, old_file, new_file, piece]
 
     """
+    if not is_possible_move(game_board, *move_info):
+        return False
+
     old_rank = move_info[0]
     new_rank = move_info[1]
     old_file = move_info[2]
