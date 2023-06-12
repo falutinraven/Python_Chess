@@ -25,6 +25,10 @@ class TestWhitePawn(unittest.TestCase):
     def test__capture(self):
         new_board = [[0] * 8 for _ in range(8)]
         move_info = [4, 5, file-1, file, Piece('p', white)]
+
+        empty_capture = validate.is_possible_move(new_board, *move_info)
+        self.assertFalse(empty_capture)
+
         new_board[5][file] = Piece('p', black)
         valid_capture = validate.is_possible_move(new_board, *move_info)
         self.assertTrue(valid_capture)
@@ -68,6 +72,10 @@ class TestBlackPawn(unittest.TestCase):
     def test_capture(self):
         new_board = [[0] * 8 for _ in range(8)]
         move_info = [7, 6, file-1, file, Piece('p', black)]
+
+        empty_capture = validate.is_possible_move(new_board, *move_info)
+        self.assertFalse(empty_capture)
+
         new_board[6][file] = Piece('p', white)
         valid_capture = validate.is_possible_move(new_board, *move_info)
         self.assertTrue(valid_capture)
@@ -121,9 +129,6 @@ class TestBishop(unittest.TestCase):
     def test_capture(self):
         new_board = [[0] * 8 for _ in range(8)]
         move_info = [3, 5, file-2, file, Piece('b', white)]
-
-        empty_capture = validate.is_possible_move(new_board, *move_info)
-        self.assertFalse(empty_capture)
 
         new_board[5][file] = Piece('p', black)
         valid_capture = validate.is_possible_move(new_board, *move_info)
