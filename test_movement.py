@@ -1,6 +1,4 @@
 import unittest
-import chess
-import board
 import move_validation as validate
 from collections import namedtuple
 
@@ -11,6 +9,7 @@ white = True
 black = False
 Piece = namedtuple('Piece', ['name', 'is_white'])
 file = file_to_row['e']
+
 
 class TestWhitePawn(unittest.TestCase):
     def test_forwards_and_backwards(self):
@@ -37,11 +36,11 @@ class TestWhitePawn(unittest.TestCase):
     def test_two_spaces(self):
         new_board = [[0] * 8 for _ in range(8)]
         move_info = [1, 3, file, file, Piece('p', white)]
-        from_starting_point = validate.is_possible_move(new_board, *move_info) 
+        from_starting_point = validate.is_possible_move(new_board, *move_info)
         self.assertTrue(from_starting_point)
 
         move_info = [2, 4, file, file, Piece('p', white)]
-        from_other_row = validate.is_possible_move(new_board, *move_info) 
+        from_other_row = validate.is_possible_move(new_board, *move_info)
         self.assertFalse(from_other_row)
 
     def test_obstructed(self):
@@ -53,6 +52,7 @@ class TestWhitePawn(unittest.TestCase):
         new_board[2][file] = Piece('p', black)
         obstructed = validate.is_possible_move(new_board, *move_info)
         self.assertFalse(obstructed)
+
 
 class TestBlackPawn(unittest.TestCase):
     def test_forwards_and_backwards(self):
@@ -81,7 +81,7 @@ class TestBlackPawn(unittest.TestCase):
         move_info = [6, 4, file, file, Piece('p', black)]
         from_starting_point = validate.is_possible_move(new_board, *move_info)
         self.assertTrue(from_starting_point)
-        
+
         move_info = [5, 3, file, file, Piece('p', black)]
         from_other_row = validate.is_possible_move(new_board, *move_info)
         self.assertFalse(from_other_row)
@@ -94,6 +94,7 @@ class TestBlackPawn(unittest.TestCase):
         obstructed = validate.is_possible_move(new_board, *move_info)
         self.assertFalse(obstructed)
         self.assertTrue(unobstructed)
+
 
 class TestBishop(unittest.TestCase):
     def test_distance_one(self):
@@ -120,6 +121,10 @@ class TestBishop(unittest.TestCase):
     def test_capture(self):
         new_board = [[0] * 8 for _ in range(8)]
         move_info = [3, 5, file-2, file, Piece('b', white)]
+
+        empty_capture = validate.is_possible_move(new_board, *move_info)
+        self.assertFalse(empty_capture)
+
         new_board[5][file] = Piece('p', black)
         valid_capture = validate.is_possible_move(new_board, *move_info)
         self.assertTrue(valid_capture)
@@ -138,6 +143,7 @@ class TestBishop(unittest.TestCase):
         obstructed = validate.is_possible_move(new_board, *move_info)
         self.assertFalse(obstructed)
 
+
 class TestRook(unittest.TestCase):
     def test_normal(self):
         new_board = [[0] * 8 for _ in range(8)]
@@ -148,7 +154,7 @@ class TestRook(unittest.TestCase):
         move_info[1] = 4
         south = validate.is_possible_move(new_board, *move_info)
 
-        move_info = [4, 4, file_to_row['a'], file_to_row['e'], Piece('r', white)]
+        move_info = [4, 4, file_to_row['a'], file, Piece('r', white)]
         east = validate.is_possible_move(new_board, *move_info)
 
         move_info[2], move_info[3] = move_info[3], move_info[2]
@@ -181,6 +187,7 @@ class TestRook(unittest.TestCase):
 
         self.assertTrue(not_obstructed)
         self.assertFalse(obstructed)
+
 
 class TestKnight(unittest.TestCase):
     def test_normal(self):

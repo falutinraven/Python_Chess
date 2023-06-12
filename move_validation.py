@@ -1,10 +1,10 @@
-import board
 from copy import deepcopy
+
 
 def pawn_move(game_board, *move_info):
     """
        returns: True if pawn move is valid and False if not
-    
+
        *move_info = [old_rank, new_rank, old_file, new_file, piece]
     """
     old_rank = move_info[0]
@@ -14,7 +14,7 @@ def pawn_move(game_board, *move_info):
     is_white = move_info[4].is_white
 
     # TODO: incorporate en passent
- 
+
     # if too big horizontal move or no vertical move, safe to return immediatly
     if abs(old_file - new_file) > 1 or old_rank == new_rank:
         return False
@@ -22,32 +22,39 @@ def pawn_move(game_board, *move_info):
         return False
     if not is_white and new_rank > old_rank:
         return False
-    if game_board[new_rank][new_file] and game_board[new_rank][new_file].is_white is is_white:
-        return False
-    
-    if is_white and old_rank == 1 and new_rank == 3 and old_file == new_file:
-        # TODO: dont rely on knowing how to index at zero. take that logic and put it somewhere 
-        # consistent 
-        return not game_board[2][new_file] and not game_board[3][new_file]
-    
-    if not is_white and old_rank == 6 and new_rank == 4 and old_file == new_file:
-        # TODO: dont rely on knowing how to index at zero. take that logic and put it somewhere 
-        # consistent 
-        return not game_board[5][new_file] and not game_board[4][new_file]
+    if game_board[new_rank][new_file]:
+        if game_board[new_rank][new_file].is_white is is_white:
+            return False
+
+    if old_file == new_file:
+        if is_white and old_rank == 1 and new_rank == 3:
+            # TODO: dont rely on knowing how to index at zero.
+            # take that logic and put it somewhere
+            # consistent
+            return not game_board[2][new_file] and not game_board[3][new_file]
+
+        if not is_white and old_rank == 6 and new_rank == 4:
+            # TODO: dont rely on knowing how to index at zero.
+            # take that logic and put it somewhere
+            # consistent
+            return not game_board[5][new_file] and not game_board[4][new_file]
+        # TODO: check if it reaches the last square and do promotion logic
 
     if abs(old_rank - new_rank) != 1:
         return False
-            
-    if old_file == new_file:
-        return not game_board[new_rank][old_file]
-        # TODO: check if it reaches the last square and do promotion logic
-    
+
+    # TODO: remove redundant if old_file == new_file:
+    # (already did this check earlier)
+    if old_file != new_file:
+        return bool(game_board[new_rank][old_file]) \
+            and is_white != game_board[new_rank][new_file].is_white
     return True
+
 
 def knight_move(*move_info):
     """
        returns: True if knight move is valid and False if not
-    
+
        *move_info = [old_rank, new_rank, old_file, new_file, piece]
     """
     old_rank = move_info[0]
@@ -55,7 +62,8 @@ def knight_move(*move_info):
     old_file = move_info[2]
     new_file = move_info[3]
 
-    if abs(old_rank - new_rank) == 2 and abs(old_file - new_file) == 1: return True
+    if abs(old_rank - new_rank) == 2 and abs(old_file - new_file) == 1:
+        return True
     elif abs(old_rank - new_rank) == 1 and abs(old_file - new_file) == 2:
         return True
     else:
@@ -65,7 +73,7 @@ def knight_move(*move_info):
 def bishop_move(game_board, *move_info):
     """
        returns: True if bishop move is valid and False if not
-    
+
        *move_info = [old_rank, new_rank, old_file, new_file, piece]
     """
     old_rank = move_info[0]
@@ -90,13 +98,13 @@ def bishop_move(game_board, *move_info):
         if piece_between:
             return False
 
-    return True 
+    return True
 
 
 def rook_move(game_board, *move_info):
     """
        returns: True if rook move is valid and False if not
-    
+
        *move_info = [old_rank, new_rank, old_file, new_file, piece]
     """
     old_rank = move_info[0]
@@ -134,28 +142,28 @@ def rook_move(game_board, *move_info):
 def king_move(game_board, *move_info):
     """
        returns: True if king move is valid and False if not
-    
+
        *move_info = [old_rank, new_rank, old_file, new_file, piece]
     """
 
-    # TODO: incorporate castling 
+    # TODO: incorporate castling
     if max(move_info[0] - move_info[1], move_info[2] - move_info[3]) > 1:
         return False
-    return rook_move(game_board, *move_info) or bishop_move(game_board, *move_info)
+    return rook_move(game_board, *move_info) \
+        or bishop_move(game_board, *move_info)
+
 
 def is_possible_move(game_board, *move_info):
     """
-       Serves as hub for functions that return the Truthy-ness 
-       of whether a move is possible 
- 
+       Serves as hub for functions that return the Truthy-ness
+       of whether a move is possible
+
        returns: True if move is valid and False if not
 
        *move_info = [old_rank, new_rank, old_file, new_file, piece]
-    
+
     """
-    old_rank = move_info[0]
     new_rank = move_info[1]
-    old_file = move_info[2]
     new_file = move_info[3]
     piece = move_info[4]
 
@@ -164,24 +172,26 @@ def is_possible_move(game_board, *move_info):
         return False
 
     if piece.name == 'p':
-       return pawn_move(game_board, *move_info)
+        return pawn_move(game_board, *move_info)
     elif piece.name == 'n':
-       return knight_move(*move_info)  
+        return knight_move(*move_info)
     elif piece.name == 'b':
-       return bishop_move(game_board, *move_info)
+        return bishop_move(game_board, *move_info)
     elif piece.name == 'r':
-       return rook_move(game_board, *move_info)
+        return rook_move(game_board, *move_info)
     elif piece.name == 'q':
-       return bishop_move(game_board, *move_info) or rook_move(game_board, *move_info)
+        return bishop_move(game_board, *move_info) \
+            or rook_move(game_board, *move_info)
     elif piece.name == 'k':
-       return king_move(game_board, *move_info)
-    return False 
+        return king_move(game_board, *move_info)
+    return False
+
 
 def is_king_checked(king_rank, king_file, king_color, game_board):
     for rank in range(8):
         for file in range(8):
             piece = game_board[rank][file]
-            if not piece: 
+            if not piece:
                 continue
             if piece.is_white is king_color:
                 continue
@@ -190,15 +200,18 @@ def is_king_checked(king_rank, king_file, king_color, game_board):
                 return True
     return False
 
+
 def attempt_move(king_info, game_board, *move_info):
     """
-       This attempts to do the move. if the king is checked after attempting the move,
+       This attempts to do the move.
+
+       if the king is checked after attempting the move,
        the move will not happen
- 
+
        returns True if move is successful and False if not
 
        move_info = [old_rank, new_rank, old_file, new_file, piece]
-    
+
     """
     old_rank = move_info[0]
     new_rank = move_info[1]
@@ -216,4 +229,4 @@ def attempt_move(king_info, game_board, *move_info):
         game_board[new_rank][new_file] = piece_to_capture
         game_board[old_rank][old_file] = attacking_piece
         return False
-    return True 
+    return True

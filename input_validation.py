@@ -1,9 +1,8 @@
-import board
-
 file_to_row = {'A': 0, 'a': 0, 'B': 1, 'b': 1, 'C': 2, 'c': 2,
                'D': 3, 'd': 3, 'E': 4, 'e': 4, 'F': 5, 'f': 5,
                'G': 6, 'g': 6, 'H': 7, 'h': 7}
 valid_pieces = set({'p', 'n', 'b', 'r', 'q', 'k'})
+
 
 def file_and_rank_in_bounds(file, rank):
     if file not in file_to_row:
@@ -13,6 +12,7 @@ def file_and_rank_in_bounds(file, rank):
         print("rank is a number 1-8, try again")
         return False
     return True
+
 
 def movement(whites_turn, game_board):
     """
@@ -64,8 +64,8 @@ def movement(whites_turn, game_board):
 
     if not file_and_rank_in_bounds(move[0], move[1]):
         return []
-    
+
     new_rank = int(move[1]) - 1
-    new_file = file_to_row[move[0]]  
-    
+    new_file = file_to_row[move[0]]
+
     return [old_rank, new_rank, old_file, new_file, piece]

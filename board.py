@@ -3,6 +3,7 @@ from collections import namedtuple
 # TODO: make own class
 Piece = namedtuple('Piece', ['name', 'is_white'])
 
+
 def setup():
     board = [[0] * 8 for _ in range(8)]
 
@@ -40,15 +41,17 @@ def setup():
 
     return board
 
+
 def piece_to_str(piece):
     if piece.is_white:
         return "W " + piece.name
     else:
         return "B " + piece.name
 
+
 def print_board(board):
     horiz_line = " --- --- --- --- --- --- --- ---"
-    row = [0] * 8 
+    row = [0] * 8
     for i in range(len(board)-1, -1, -1):
         print(horiz_line)
         for j in range(8):
