@@ -45,10 +45,17 @@ def main():
                 black_king_info[1] = move_info[3]
 
         piece_index_in_pieces = None 
+        capture_index = None
         for i, piece in enumerate(pieces):
-            if piece.name == move_info[4].name and piece.is_white == move_info[4].is_white and piece.rank == move_info[0] and piece.file == move_info[2]:
-                piece_index_in_pieces = i
-                break
+            if piece:
+                if piece.rank == move_info[1] and piece.file == move_info[3] and piece.is_white != whites_turn:
+                    capture_index = i 
+            if piece:
+                if piece.name == move_info[4].name and piece.is_white == move_info[4].is_white and piece.rank == move_info[0] and piece.file == move_info[2]:
+                    piece_index_in_pieces = i
+                    break
+        if capture_index:
+            pieces[capture_index] = None
         if not piece_index_in_pieces:
             print("moved nonexistent piece, try again")
         else:
