@@ -14,9 +14,10 @@ def pawn_move(game_board, *move_info):
     is_white = move_info[4].is_white
 
     capture = game_board[new_rank][new_file]
-    if (   abs(old_file - new_file) > 1 
-        or old_rank == new_rank
-        or abs(old_rank - new_rank) > 2
+    if (
+            abs(old_file - new_file) > 1
+            or old_rank == new_rank
+            or abs(old_rank - new_rank) > 2
     ):
         return False
     if is_white and new_rank < old_rank:
@@ -33,22 +34,21 @@ def pawn_move(game_board, *move_info):
             if old_rank != 1:
                 return False
             else:
-                return not game_board[old_rank+1][new_file] and not capture 
+                return not game_board[old_rank+1][new_file] and not capture
         if not is_white:
             if old_rank != 6:
                 return False
             else:
-                return not game_board[old_rank-1][new_file] and not capture 
-            
+                return not game_board[old_rank-1][new_file] and not capture
+
     if old_file == new_file:
         # TODO: check if it reaches the last square and do promotion logic
-        return not capture 
+        return not capture
     else:
-        if not capture: 
+        if not capture:
             return False
         else:
             return capture.is_white != is_white
-
 
 
 def knight_move(*move_info):
@@ -146,8 +146,9 @@ def king_move(game_board, *move_info):
        *move_info = [old_rank, new_rank, old_file, new_file, piece]
     """
 
-    # TODO: incorporate castling 
-    if max(abs(move_info[0] - move_info[1]), abs(move_info[2] - move_info[3])) > 1:
+    # TODO: incorporate castling
+    if max(abs(move_info[0] - move_info[1]),
+           abs(move_info[2] - move_info[3])) > 1:
         return False
     return rook_move(game_board, *move_info) \
         or bishop_move(game_board, *move_info)
