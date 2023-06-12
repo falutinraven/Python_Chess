@@ -44,6 +44,26 @@ def main():
                 black_king_info[0] = move_info[1]
                 black_king_info[1] = move_info[3]
 
+        piece_index_in_pieces = None 
+        for i, piece in enumerate(pieces):
+            if piece.name == move_info[4].name and piece.is_white == move_info[4].is_white and piece.rank == move_info[0] and piece.file == move_info[2]:
+                piece_index_in_pieces = i
+                break
+        if not piece_index_in_pieces:
+            print("moved nonexistent piece, try again")
+        else:
+            pieces[piece_index_in_pieces].rank = move_info[1] 
+            pieces[piece_index_in_pieces].file = move_info[3]
+            # print(pieces[piece_index_in_pieces].name, pieces[piece_index_in_pieces].rank, pieces[piece_index_in_pieces].file)
+            # pieces[i].name = name if promoting pawn
+        """
+        for the piece that I move i will check if there is no piece where it used to be.
+        i also need to make sure to remember to store its old location so i can find the right piece
+        in the list of pieces
+
+        after successful move, i will update the pieces location in the list of pieces
+        i will also double check that the board contains the right piece at the right location
+        """
         whites_turn = not whites_turn
 
 
