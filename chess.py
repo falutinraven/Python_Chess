@@ -1,13 +1,13 @@
 import board
 import move_validation
 import input_validation
+import piece
 
 white_king_info = [0, 4, True]
 black_king_info = [7, 4, False]
 
-
 def main():
-    game_board = board.setup()
+    pieces, game_board = board.setup()
     whites_turn = True
     game_over = False
 
