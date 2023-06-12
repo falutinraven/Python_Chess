@@ -44,7 +44,7 @@ def main():
                 black_king_info[0] = move_info[1]
                 black_king_info[1] = move_info[3]
 
-        piece_index_in_pieces = None 
+        piece_index = None 
         capture_index = None
         for i, piece in enumerate(pieces):
             if piece:
@@ -56,12 +56,12 @@ def main():
                     break
         if capture_index:
             pieces[capture_index] = None
-        if not piece_index_in_pieces:
+        if not piece_index:
             print("moved nonexistent piece, try again")
         else:
-            pieces[piece_index_in_pieces].rank = move_info[1] 
-            pieces[piece_index_in_pieces].file = move_info[3]
-            # print(pieces[piece_index_in_pieces].name, pieces[piece_index_in_pieces].rank, pieces[piece_index_in_pieces].file)
+            pieces[piece_index].rank = move_info[1] 
+            pieces[piece_index].file = move_info[3]
+            # print(pieces[piece_index].name, pieces[piece_index].rank, pieces[piece_index].file)
             # pieces[i].name = name if promoting pawn
         """
         for the piece that I move i will check if there is no piece where it used to be.
