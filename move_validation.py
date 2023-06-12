@@ -13,42 +13,42 @@ def pawn_move(game_board, *move_info):
     new_file = move_info[3]
     is_white = move_info[4].is_white
 
-    # TODO: incorporate en passent
-
-    # if too big horizontal move or no vertical move, safe to return immediatly
-    if abs(old_file - new_file) > 1 or old_rank == new_rank:
+    capture = game_board[new_rank][new_file]
+    if (   abs(old_file - new_file) > 1 
+        or old_rank == new_rank
+        or abs(old_rank - new_rank) > 2
+    ):
         return False
     if is_white and new_rank < old_rank:
         return False
     if not is_white and new_rank > old_rank:
         return False
-    if game_board[new_rank][new_file]:
-        if game_board[new_rank][new_file].is_white is is_white:
+
+    # validate double move on pawn's first move
+    # TODO: incorporate en passent
+    if abs(old_rank - new_rank) == 2:
+        if old_file != new_file:
             return False
-
+        if is_white:
+            if old_rank != 1:
+                return False
+            else:
+                return not game_board[old_rank+1][new_file] and not capture 
+        if not is_white:
+            if old_rank != 6:
+                return False
+            else:
+                return not game_board[old_rank-1][new_file] and not capture 
+            
     if old_file == new_file:
-        if is_white and old_rank == 1 and new_rank == 3:
-            # TODO: dont rely on knowing how to index at zero.
-            # take that logic and put it somewhere
-            # consistent
-            return not game_board[2][new_file] and not game_board[3][new_file]
-
-        if not is_white and old_rank == 6 and new_rank == 4:
-            # TODO: dont rely on knowing how to index at zero.
-            # take that logic and put it somewhere
-            # consistent
-            return not game_board[5][new_file] and not game_board[4][new_file]
         # TODO: check if it reaches the last square and do promotion logic
+        return not capture 
+    else:
+        if not capture: 
+            return False
+        else:
+            return capture.is_white != is_white
 
-    if abs(old_rank - new_rank) != 1:
-        return False
-
-    # TODO: remove redundant if old_file == new_file:
-    # (already did this check earlier)
-    if old_file != new_file:
-        return bool(game_board[new_rank][old_file]) \
-            and is_white != game_board[new_rank][new_file].is_white
-    return True
 
 
 def knight_move(*move_info):
@@ -146,8 +146,8 @@ def king_move(game_board, *move_info):
        *move_info = [old_rank, new_rank, old_file, new_file, piece]
     """
 
-    # TODO: incorporate castling
-    if max(move_info[0] - move_info[1], move_info[2] - move_info[3]) > 1:
+    # TODO: incorporate castling 
+    if max(abs(move_info[0] - move_info[1]), abs(move_info[2] - move_info[3])) > 1:
         return False
     return rook_move(game_board, *move_info) \
         or bishop_move(game_board, *move_info)
