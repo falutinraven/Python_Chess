@@ -14,8 +14,10 @@ def main():
     while game_over is False:
         board.print_board(game_board)
 
-        # move_info = [old_rank, new_rank, old_file, new_file, piece]
-        move_info = input_validation.movement(whites_turn, game_board)
+        # move_info = [old_rank, new_rank, old_file, new_file, move_piece]
+        old_rank, new_rank, old_file, new_file, move_piece = input_validation.movement(whites_turn, game_board)
+
+        move_info = [old_rank, new_rank, old_file, new_file, move_piece]
 
         if not move_info:
             continue
@@ -38,20 +40,20 @@ def main():
 
         if move_info[-1] == 'k':
             if whites_turn:
-                white_king_info[0] = move_info[1]
-                white_king_info[1] = move_info[3]
+                white_king_info[0] = new_rank
+                white_king_info[1] = new_file
             if not whites_turn:
-                black_king_info[0] = move_info[1]
-                black_king_info[1] = move_info[3]
+                black_king_info[0] = new_rank
+                black_king_info[1] = new_file
 
         piece_index = None 
         capture_index = None
         for i, piece in enumerate(pieces):
             if piece:
-                if piece.rank == move_info[1] and piece.file == move_info[3] and piece.is_white != whites_turn:
+                if piece.rank == new_rank and piece.file == new_file and piece.is_white != whites_turn:
                     capture_index = i 
             if piece:
-                if piece.name == move_info[4].name and piece.is_white == move_info[4].is_white and piece.rank == move_info[0] and piece.file == move_info[2]:
+                if piece.name == move_piece.name and piece.is_white == move_piece.is_white and piece.rank == old_rank and piece.file == old_file:
                     piece_index_in_pieces = i
                     break
         if capture_index:
@@ -59,8 +61,8 @@ def main():
         if not piece_index:
             print("moved nonexistent piece, try again")
         else:
-            pieces[piece_index].rank = move_info[1] 
-            pieces[piece_index].file = move_info[3]
+            pieces[piece_index].rank = new_rank 
+            pieces[piece_index].file = new_file
             # print(pieces[piece_index].name, pieces[piece_index].rank, pieces[piece_index].file)
             # pieces[i].name = name if promoting pawn
         """
