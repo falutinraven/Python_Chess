@@ -68,4 +68,4 @@ def movement(whites_turn, game_board):
     new_rank = int(move[1]) - 1
     new_file = file_to_row[move[0]]
 
-    return [old_rank, new_rank, old_file, new_file, piece]
+    return [old_rank, new_rank, old_file, new_file, piece.name, piece.is_white]

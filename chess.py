@@ -3,9 +3,6 @@ import move_validation
 import input_validation
 import piece
 
-white_king_info = [0, 4, True]
-black_king_info = [7, 4, False]
-
 def main():
     pieces, game_board = board.setup()
     whites_turn = True
@@ -15,56 +12,48 @@ def main():
         board.print_board(game_board)
 
         # move_info = [old_rank, new_rank, old_file, new_file, move_piece]
-        old_rank, new_rank, old_file, new_file, move_piece = input_validation.movement(whites_turn, game_board)
-
-        move_info = [old_rank, new_rank, old_file, new_file, move_piece]
+        move_info = input_validation.movement(whites_turn, game_board)
 
         if not move_info:
             continue
 
+        old_rank = move_info[0]
+        new_rank = move_info[1]
+        old_file = move_info[2]
+        new_file = move_info[3]
+        move_piece_name = move_info[4]
+        move_piece_is_white = move_info[5]
+
         # TODO: put is possible move in attempt move in move_validation module.
-        if whites_turn:
-            successful_move = move_validation.attempt_move(
-                white_king_info,
-                game_board,
-                *move_info)
-        else:
-            successful_move = move_validation.attempt_move(
-                black_king_info,
-                game_board,
-                *move_info)
+        successful_move = move_validation.attempt_move(
+            pieces,
+            game_board,
+            *move_info)
 
         if not successful_move:
             print("invalid move, try again")
             continue
 
-        if move_info[-1] == 'k':
-            if whites_turn:
-                white_king_info[0] = new_rank
-                white_king_info[1] = new_file
-            if not whites_turn:
-                black_king_info[0] = new_rank
-                black_king_info[1] = new_file
-
         piece_index = None 
         capture_index = None
         for i, piece in enumerate(pieces):
-            if piece:
-                if piece.rank == new_rank and piece.file == new_file and piece.is_white != whites_turn:
-                    capture_index = i 
-            if piece:
-                if piece.name == move_piece.name and piece.is_white == move_piece.is_white and piece.rank == old_rank and piece.file == old_file:
-                    piece_index_in_pieces = i
-                    break
+            if not piece:
+                continue
+            if piece.rank == new_rank and piece.file == new_file and piece.is_white != whites_turn:
+                capture_index = i 
+            if piece.name == move_piece_name and piece.is_white == move_piece_is_white and piece.rank == old_rank and piece.file == old_file:
+                piece_index = i
+                print("FOUND PIECE")
+                break
         if capture_index:
             pieces[capture_index] = None
         if not piece_index:
             print("moved nonexistent piece, try again")
-        else:
-            pieces[piece_index].rank = new_rank 
-            pieces[piece_index].file = new_file
-            # print(pieces[piece_index].name, pieces[piece_index].rank, pieces[piece_index].file)
-            # pieces[i].name = name if promoting pawn
+            continue
+        pieces[piece_index].rank = new_rank 
+        pieces[piece_index].file = new_file
+        # print(pieces[piece_index].name, pieces[piece_index].rank, pieces[piece_index].file)
+        # pieces[i].name = name if promoting pawn
         """
         for the piece that I move i will check if there is no piece where it used to be.
         i also need to make sure to remember to store its old location so i can find the right piece
