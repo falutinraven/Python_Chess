@@ -31,3 +31,22 @@ def piece_moves_white_pawn(game_board, *move_info):
 # for move in actual_possible_moves[old_rank][old_file]:
 #     if move_attempt == move:
 #         return true/move_piece
+
+def generate_moves():
+    """
+        make and return a list of all moves that are theoretically possible (call is_possible_move() in move_validation module)
+        from whoevers turn it is (whites turn or black) 
+        ex: each pawn move will have max of 4 possible moves (not including promotions) and the possible moves will be added
+        to a list of all theoretical moves that will be iterated through to check if any prevent check in future function.
+    """
+    # TODO: use list.extend() instead of append() to take the lists from each of the piece move generators into this final list
+    pass
+
+
+def mate():
+    """
+       iterate through list of all moves that can be attempted (from generate_moves()) and will attempt_move() each one
+       if there is no attempt_move() that succeeds then either checkmate or stalemate (worry about that later)
+
+    """
+    pass

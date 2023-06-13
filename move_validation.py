@@ -157,7 +157,7 @@ def king_move(game_board, *move_info):
 def is_possible_move(game_board, *move_info):
     """
        Serves as hub for functions that return the Truthy-ness
-       of whether a move is possible
+       of whether a move is possible (before checking for checks)
 
        returns: True if move is valid and False if not
 
@@ -166,6 +166,12 @@ def is_possible_move(game_board, *move_info):
     """
     new_rank = move_info[1]
     new_file = move_info[3]
+
+    if new_rank < 0 or new_rank > 7:
+        return False
+    if new_file < 0 or new_file > 7:
+        return False
+
     name = move_info[4]
     is_white = move_info[5]
 
