@@ -14,10 +14,13 @@ file = file_to_row['e']
 class TestWhitePawn(unittest.TestCase):
     def test_forwards_and_backwards(self):
         new_board = [[0] * 8 for _ in range(8)]
+        new_board[4][file] = Piece('p', white)
         move_info = [4, 5, file, file, 'p', white]
         forwards_move = validate.is_possible_move(new_board, *move_info)
         self.assertTrue(forwards_move)
 
+        new_board = [[0] * 8 for _ in range(8)]
+        new_board[5][file] = Piece('p', white)
         move_info = [5, 4, file, file, 'p', white]
         backwards_move = validate.is_possible_move(new_board, *move_info)
         self.assertFalse(backwards_move)
