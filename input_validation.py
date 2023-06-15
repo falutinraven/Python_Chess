@@ -29,6 +29,9 @@ def movement(whites_turn, game_board):
 
     usr_inp = input()
 
+    if usr_inp == "quit":
+        quit()
+
     if len(usr_inp) != 3:
         print("input too long/short. 'pe2' for pawn on file E and rank 2")
         return []
@@ -57,6 +60,8 @@ def movement(whites_turn, game_board):
 
     print(turn + "'s turn: Where will your piece move? (e.g. file & rank e3)")
     move = input()
+    if move == "quit":
+        quit()
 
     if len(move) != 2:
         print("make input just 2 letters")
