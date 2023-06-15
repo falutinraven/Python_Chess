@@ -10,22 +10,23 @@ def piece_moves_white_pawn(game_board, *move_info):
         return type is list of tuples that are
         [(old_rank1, new_rank1, old_file1, new_file1)....]
 
-        *move_info = [old_rank, new_rank, old_file, new_file, piece]
+        *move_info = [old_rank, new_rank, old_file, new_file, piece.name, piece.is_white]
     """
     old_rank = move_info[0]
     old_file = move_info[2]
 
     theoretical_moves = [(old_rank+1, old_file), (old_rank+2, old_file),
                          (old_rank+1, old_file+1), (old_rank+1, old_file-1)]
-    actual_possible_moves = []
+    possible_moves = []
 
     for move in theoretical_moves:
-        # TODO: discard move if its out of bounds.
-        move_info = [old_rank, move[0], old_file, move[1]]
-        if move_validation.pawn_move(game_board, *move_info):
-            actual_possible_moves.append(*move_info)
+        new_rank = move[0]
+        new_file = move[1]
+        move_info = [old_rank, new_rank, old_file, new_file, 'p', True]
+        if move_validation.is_possible_move(game_board, *move_info):
+            actual_possible_moves.append(move_info)
 
-    return actual_possible_moves
+    return possible_moves
 
 
 # for move in actual_possible_moves[old_rank][old_file]:
@@ -40,6 +41,8 @@ def generate_moves():
         to a list of all theoretical moves that will be iterated through to check if any prevent check in future function.
     """
     # TODO: use list.extend() instead of append() to take the lists from each of the piece move generators into this final list
+    # TODO: confirm piece exists at location of move info. now all the checks are wether the move is possible, but it will do that move even if
+    # there is no correct piece at the old_rank and old_file location
     pass
 
 

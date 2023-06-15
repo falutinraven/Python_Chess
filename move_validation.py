@@ -164,6 +164,8 @@ def is_possible_move(game_board, *move_info):
        *move_info = [old_rank, new_rank, old_file, new_file, name, is_white]
 
     """
+    old_rank = move_info[0]
+    old_file = move_info[2]
     new_rank = move_info[1]
     new_file = move_info[3]
 
@@ -174,6 +176,12 @@ def is_possible_move(game_board, *move_info):
 
     name = move_info[4]
     is_white = move_info[5]
+
+    piece = game_board[old_rank][old_file] 
+    if not piece:
+        return False
+    if piece.name != name or piece.is_white != is_white:
+        return False
 
     enemy_piece = game_board[new_rank][new_file]
     if enemy_piece and enemy_piece.is_white is is_white:
