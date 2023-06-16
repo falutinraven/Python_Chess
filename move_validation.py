@@ -177,7 +177,7 @@ def is_possible_move(game_board, *move_info):
     name = move_info[4]
     is_white = move_info[5]
 
-    piece = game_board[old_rank][old_file] 
+    piece = game_board[old_rank][old_file]
     if not piece:
         return False
     if piece.name != name or piece.is_white != is_white:
@@ -211,16 +211,21 @@ def is_king_checked(pieces, game_board, whites_turn):
         if piece.name == 'k' and piece.is_white == whites_turn:
             king = piece
             break
-    if king == None:
+    if king is None:
         # Uhmmmm.... guess theres no king?
-        return "what the heck" 
-    
+        return "what the heck"
+
     for piece in pieces:
         if not piece:
             continue
         if piece.is_white == whites_turn:
             continue
-        move_info = [piece.rank, king.rank, piece.file, king.file, piece.name, piece.is_white]
+        move_info = [piece.rank,
+                     king.rank,
+                     piece.file,
+                     king.file,
+                     piece.name,
+                     piece.is_white]
         if is_possible_move(game_board, *move_info):
             return True
     return False
@@ -245,7 +250,6 @@ def attempt_move(pieces, game_board, *move_info):
     new_rank = move_info[1]
     old_file = move_info[2]
     new_file = move_info[3]
-    name = move_info[4]
     is_white = move_info[5]
 
     piece_to_capture = deepcopy(game_board[new_rank][new_file])
@@ -254,7 +258,7 @@ def attempt_move(pieces, game_board, *move_info):
     game_board[new_rank][new_file] = deepcopy(game_board[old_rank][old_file])
     game_board[old_rank][old_file] = 0
 
-    whites_turn = is_white 
+    whites_turn = is_white
     if is_king_checked(pieces, game_board, whites_turn):
         print("cant move here since king would be checked")
         game_board[new_rank][new_file] = piece_to_capture
