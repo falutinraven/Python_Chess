@@ -224,16 +224,5 @@ def mate(pieces, whites_turn, game_board):
     all_possible_moves = generate_moves(pieces, whites_turn, game_board)
     for move_info in all_possible_moves:
         if move_validation.attempt_move(pieces, game_board, *move_info):
-            print("whites turn = ", whites_turn)
-            print("ranks, ",
-                  move_info[0]+1, " ",
-                  move_info[1]+1, " ",)
-
-            print("files, ",
-                  move_info[2]+1, " ",
-                  move_info[3]+1, " ",)
-
-            print(move_info[4], " ",
-                  move_info[5])
             return False
     return True

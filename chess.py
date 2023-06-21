@@ -1,15 +1,25 @@
 import board
 import move_validation
 import input_validation
-import piece
+import mate
+from copy import deepcopy
+
 
 def main():
     pieces, game_board = board.setup()
     whites_turn = True
-    game_over = False
 
-    while game_over is False:
+    while True:
         board.print_board(game_board)
+
+        if mate.mate(pieces, whites_turn, game_board):
+            # TODO: implement different mates i.e. checkmate/stalemate
+            if whites_turn:
+                print("game over: black wins")
+            if not whites_turn:
+                print("game over: white wins")
+                pass
+            break
 
         # move_info = [old_rank, new_rank, old_file, new_file, move_piece]
         move_info = input_validation.movement(whites_turn, game_board)
@@ -34,23 +44,26 @@ def main():
             print("invalid move, try again")
             continue
 
-        piece_index = None 
+        # move piece if successful move
+        game_board[new_rank][new_file] = deepcopy(game_board[old_rank][old_file])
+        game_board[old_rank][old_file] = 0
+
+        piece_index = None
         capture_index = None
         for i, piece in enumerate(pieces):
             if not piece:
                 continue
             if piece.rank == new_rank and piece.file == new_file and piece.is_white != whites_turn:
-                capture_index = i 
+                capture_index = i
             if piece.name == move_piece_name and piece.is_white == move_piece_is_white and piece.rank == old_rank and piece.file == old_file:
                 piece_index = i
-                print("FOUND PIECE")
                 break
         if capture_index:
             pieces[capture_index] = None
         if not piece_index:
             print("moved nonexistent piece, try again")
             continue
-        pieces[piece_index].rank = new_rank 
+        pieces[piece_index].rank = new_rank
         pieces[piece_index].file = new_file
         # print(pieces[piece_index].name, pieces[piece_index].rank, pieces[piece_index].file)
         # pieces[i].name = name if promoting pawn

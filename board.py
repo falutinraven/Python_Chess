@@ -4,6 +4,7 @@ import piece
 # TODO: make own class
 Piece = namedtuple('Piece', ['name', 'is_white'])
 
+
 def setup():
     pieces = []
     board = [[0] * 8 for _ in range(8)]
