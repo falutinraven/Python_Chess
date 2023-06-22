@@ -128,8 +128,6 @@ def rook_move(game_board, *move_info):
 
 def king_move(game_board, *move_info):
     """
-       returns: True if king move is valid and False if not
-
        *move_info = [old_rank, new_rank, old_file, new_file, piece]
     """
 
@@ -143,11 +141,6 @@ def king_move(game_board, *move_info):
 
 def is_possible_move(game_board, *move_info):
     """
-       Serves as hub for functions that return the Truthy-ness
-       of whether a move is possible (before checking for checks)
-
-       returns: True if move is valid and False if not
-
        *move_info = [old_rank, new_rank, old_file, new_file, name, is_white]
 
     """
@@ -167,7 +160,7 @@ def is_possible_move(game_board, *move_info):
     piece = game_board[old_rank][old_file]
     if not piece:
         return False
-    if piece.name != name or piece.is_white != is_white:
+    if piece.name != name or piece.is_white is not is_white:
         return False
 
     enemy_piece = game_board[new_rank][new_file]
@@ -191,15 +184,7 @@ def is_possible_move(game_board, *move_info):
 
 
 def is_king_checked(pieces, game_board, whites_turn):
-    king = None
-    for piece in pieces:
-        if not piece:
-            continue
-        if piece.name == 'k' and piece.is_white == whites_turn:
-            king = piece
-            break
-    if king is None:
-        return "what the heck"
+    king = pieces[0] if whites_turn else pieces[1]
 
     for piece in pieces:
         if not piece:

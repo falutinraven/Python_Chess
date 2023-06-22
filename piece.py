@@ -8,10 +8,11 @@ class Piece():
     file = None
 
     def __repr__(self):
-        if self.is_white:
-            return f'Piece(\'{self.name}\', white, {row_to_file[self.file]}{self.rank+1})'
+        color = "White" if self.is_white else "Black"
+        if self.rank and self.file:
+            return f'Piece(\'{self.name}\', {color}, {row_to_file[self.file]}{self.rank+1})'
         else:
-            return f'Piece(\'{self.name}\', black, {row_to_file[self.file]}{self.rank+1})'
+            return f'Piece(\'{self.name}\', {color})'
 
     def __init__(self, name, is_white, rank=None, file=None):
         self.name = name

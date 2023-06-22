@@ -19,10 +19,7 @@ def movement(whites_turn, game_board):
         returns move_info if valid input. if not, returns an empty list
         move_info = [old_rank, new_rank, old_file, new_file, piece]
     """
-    if whites_turn:
-        turn = "White"
-    else:
-        turn = "Black"
+    turn = "White" if whites_turn else "Black"
 
     print(turn + "'s turn: input letter, file & rank of piece to move")
     print("pieces: (p, n, b, r, q, k), file: A/a-H/h, rank: 1-8")
