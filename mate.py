@@ -5,6 +5,8 @@ def directional_moves(game_board, vertical, horizontal, *move_info):
     """
         vertical   = rate of change  (1 = up,    0 = no change, -1 = down)
         horizontal = rate of change  (1 = right, 0 = no change, -1 = left)
+
+        *move_info = [old_rank, new_rank, old_file, new_file, name, is_white]
     """
     old_rank = move_info[0]
     old_file = move_info[2]
@@ -15,6 +17,7 @@ def directional_moves(game_board, vertical, horizontal, *move_info):
 
     new_rank = old_rank + vertical
     new_file = old_file + horizontal
+
     while True:
         move_info = [old_rank, new_rank, old_file, new_file, name, is_white]
         if not move_validation.is_possible_move(game_board, *move_info):
@@ -26,28 +29,42 @@ def directional_moves(game_board, vertical, horizontal, *move_info):
     return possible_moves
 
 
-def white_pawn_moves(game_board, *move_info):
+def filter_moves(game_board, theoretical_moves, *move_info):
     """
         *move_info = [old_rank, new_rank, old_file, new_file, name, is_white]
     """
-
     old_rank = move_info[0]
     old_file = move_info[2]
     name = move_info[4]
     is_white = move_info[5]
 
-    theoretical_moves = [(old_rank+1, old_file), (old_rank+2, old_file),
-                         (old_rank+1, old_file+1), (old_rank+1, old_file-1)]
     possible_moves = []
 
     for move in theoretical_moves:
         new_rank = move[0]
         new_file = move[1]
+
         move_info = [old_rank, new_rank, old_file, new_file, name, is_white]
+
         if move_validation.is_possible_move(game_board, *move_info):
             possible_moves.append(move_info)
 
     return possible_moves
+
+
+def white_pawn_moves(game_board, *move_info):
+    """
+        *move_info = [old_rank, new_rank, old_file, new_file, name, is_white]
+    """
+    old_rank = move_info[0]
+    old_file = move_info[2]
+
+    theoretical_moves = [(old_rank+1, old_file), 
+                         (old_rank+2, old_file),
+                         (old_rank+1, old_file+1), 
+                         (old_rank+1, old_file-1)]
+
+    return filter_moves(game_board, theoretical_moves, *move_info)
 
 
 def black_pawn_moves(game_board, *move_info):
@@ -57,28 +74,21 @@ def black_pawn_moves(game_board, *move_info):
 
     old_rank = move_info[0]
     old_file = move_info[2]
-    name = move_info[4]
-    is_white = move_info[5]
 
-    theoretical_moves = [(old_rank-1, old_file), (old_rank-2, old_file),
-                         (old_rank-1, old_file+1), (old_rank-1, old_file-1)]
-    possible_moves = []
+    theoretical_moves = [(old_rank-1, old_file),
+                         (old_rank-2, old_file),
+                         (old_rank-1, old_file+1), 
+                         (old_rank-1, old_file-1)]
 
-    for move in theoretical_moves:
-        new_rank = move[0]
-        new_file = move[1]
-        move_info = [old_rank, new_rank, old_file, new_file, name, is_white]
-        if move_validation.is_possible_move(game_board, *move_info):
-            possible_moves.append(move_info)
-
-    return possible_moves
+    return filter_moves(game_board, theoretical_moves, *move_info)
 
 
 def knight_moves(game_board, *move_info):
+    """
+        *move_info = [old_rank, new_rank, old_file, new_file, name, is_white]
+    """
     old_rank = move_info[0]
     old_file = move_info[2]
-    name = move_info[4]
-    is_white = move_info[5]
 
     theoretical_moves = [(old_rank+1, old_file+2),
                          (old_rank+2, old_file+1),
@@ -88,16 +98,8 @@ def knight_moves(game_board, *move_info):
                          (old_rank+1, old_file-2),
                          (old_rank-1, old_file-2),
                          (old_rank-2, old_file-1)]
-    possible_moves = []
 
-    for move in theoretical_moves:
-        new_rank = move[0]
-        new_file = move[1]
-        move_info = [old_rank, new_rank, old_file, new_file, name, is_white]
-        if move_validation.is_possible_move(game_board, *move_info):
-            possible_moves.append(move_info)
-
-    return possible_moves
+    return filter_moves(game_board, theoretical_moves, *move_info)
 
 
 def bishop_moves(game_board, *move_info):
@@ -105,10 +107,13 @@ def bishop_moves(game_board, *move_info):
 
     north_east = directional_moves(game_board, 1, 1, *move_info)
     possible_moves.extend(north_east)
+
     south_east = directional_moves(game_board, -1, 1, *move_info)
     possible_moves.extend(south_east)
+
     north_west = directional_moves(game_board, 1, -1, *move_info)
     possible_moves.extend(north_west)
+
     south_west = directional_moves(game_board, -1, -1, *move_info)
     possible_moves.extend(south_west)
 
@@ -120,10 +125,13 @@ def rook_moves(game_board, *move_info):
 
     right = directional_moves(game_board, 0, 1, *move_info)
     possible_moves.extend(right)
+
     left = directional_moves(game_board, 0, -1, *move_info)
     possible_moves.extend(left)
+
     up = directional_moves(game_board, 1, 0, *move_info)
     possible_moves.extend(up)
+
     down = directional_moves(game_board, -1, 0, *move_info)
     possible_moves.extend(down)
 
@@ -131,10 +139,11 @@ def rook_moves(game_board, *move_info):
 
 
 def king_moves(game_board, *move_info):
+    """
+        *move_info = [old_rank, new_rank, old_file, new_file, name, is_white]
+    """
     old_rank = move_info[0]
     old_file = move_info[2]
-    name = move_info[4]
-    is_white = move_info[5]
 
     # TODO: include castling
     theoretical_moves = [(old_rank+1, old_file+1),
@@ -145,16 +154,8 @@ def king_moves(game_board, *move_info):
                          (old_rank-1, old_file+1),
                          (old_rank-1, old_file),
                          (old_rank-1, old_file-1)]
-    possible_moves = []
 
-    for move in theoretical_moves:
-        new_rank = move[0]
-        new_file = move[1]
-        move_info = [old_rank, new_rank, old_file, new_file, name, is_white]
-        if move_validation.is_possible_move(game_board, *move_info):
-            possible_moves.append(move_info)
-
-    return possible_moves
+    return filter_moves(game_board, theoretical_moves, *move_info)
 
 
 def generate_moves(pieces, whites_turn, game_board):
@@ -162,7 +163,7 @@ def generate_moves(pieces, whites_turn, game_board):
         *move_info = [old_rank, new_rank, old_file, new_file, name, is_white]
     """
 
-    all_moves = []
+    moves = []
 
     for piece in pieces:
 
@@ -174,22 +175,22 @@ def generate_moves(pieces, whites_turn, game_board):
             continue
 
         if piece.name == 'p' and piece.is_white:
-            all_moves.extend(white_pawn_moves(game_board, *move_info))
+            moves.extend(white_pawn_moves(game_board, *move_info))
         if piece.name == 'p' and not piece.is_white:
-            all_moves.extend(black_pawn_moves(game_board, *move_info))
+            moves.extend(black_pawn_moves(game_board, *move_info))
         if piece.name == 'n':
-            all_moves.extend(knight_moves(game_board, *move_info))
+            moves.extend(knight_moves(game_board, *move_info))
         if piece.name == 'b':
-            all_moves.extend(bishop_moves(game_board, *move_info))
+            moves.extend(bishop_moves(game_board, *move_info))
         if piece.name == 'r':
-            all_moves.extend(rook_moves(game_board, *move_info))
+            moves.extend(rook_moves(game_board, *move_info))
         if piece.name == 'q':
-            all_moves.extend(bishop_moves(game_board, *move_info))
-            all_moves.extend(rook_moves(game_board, *move_info))
+            moves.extend(bishop_moves(game_board, *move_info))
+            moves.extend(rook_moves(game_board, *move_info))
         if piece.name == 'k':
-            all_moves.extend(king_moves(game_board, *move_info))
+            moves.extend(king_moves(game_board, *move_info))
 
-    return all_moves
+    return moves
 
 
 def mate(pieces, whites_turn, game_board):
