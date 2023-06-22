@@ -59,10 +59,7 @@ def setup():
 
 
 def piece_to_str(piece):
-    if piece.is_white:
-        return "W " + piece.name
-    else:
-        return "B " + piece.name
+    return "W " + piece.name if piece.is_white else "B " + piece.name
 
 
 def print_board(board):
