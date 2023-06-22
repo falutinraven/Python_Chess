@@ -9,7 +9,7 @@ class Piece():
 
     def __repr__(self):
         color = "White" if self.is_white else "Black"
-        if self.rank and self.file:
+        if self.rank is not None and self.file is not None:
             return f'Piece(\'{self.name}\', {color}, {row_to_file[self.file]}{self.rank+1})'
         else:
             return f'Piece(\'{self.name}\', {color})'
