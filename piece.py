@@ -13,7 +13,7 @@ class Piece():
         else:
             return f'Piece(\'{self.name}\', black, {row_to_file[self.file]}{self.rank+1})'
 
-    def __init__(self, name, is_white, rank, file):
+    def __init__(self, name, is_white, rank=None, file=None):
         self.name = name
         self.is_white = is_white
         self.rank = rank
