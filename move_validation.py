@@ -4,8 +4,6 @@ import piece
 
 def pawn_move(game_board, *move_info):
     """
-       returns: True if pawn move is valid and False if not
-
        *move_info = [old_rank, new_rank, old_file, new_file, piece]
     """
     old_rank = move_info[0]
@@ -15,11 +13,10 @@ def pawn_move(game_board, *move_info):
     is_white = move_info[5]
 
     capture = game_board[new_rank][new_file]
-    if (
-            abs(old_file - new_file) > 1
-            or old_rank == new_rank
-            or abs(old_rank - new_rank) > 2
-    ):
+
+    if (abs(old_file - new_file) > 1
+        or old_rank == new_rank
+        or abs(old_rank - new_rank) > 2):
         return False
     if is_white and new_rank < old_rank:
         return False
@@ -54,8 +51,6 @@ def pawn_move(game_board, *move_info):
 
 def knight_move(*move_info):
     """
-       returns: True if knight move is valid and False if not
-
        *move_info = [old_rank, new_rank, old_file, new_file, piece]
     """
     old_rank = move_info[0]
@@ -73,8 +68,6 @@ def knight_move(*move_info):
 
 def bishop_move(game_board, *move_info):
     """
-       returns: True if bishop move is valid and False if not
-
        *move_info = [old_rank, new_rank, old_file, new_file, piece]
     """
     old_rank = move_info[0]
@@ -85,11 +78,11 @@ def bishop_move(game_board, *move_info):
     if not abs(old_rank - new_rank) == abs(old_file - new_file):
         return False
 
-    if new_rank > old_rank:
+    if old_rank < new_rank:
         ranks = list(range(old_rank + 1, new_rank))
     else:
         ranks = list(range(old_rank - 1, new_rank, -1))
-    if new_file > old_file:
+    if old_file < new_file:
         files = list(range(old_file + 1, new_file))
     else:
         files = list(range(old_file - 1, new_file, -1))
@@ -104,8 +97,6 @@ def bishop_move(game_board, *move_info):
 
 def rook_move(game_board, *move_info):
     """
-       returns: True if rook move is valid and False if not
-
        *move_info = [old_rank, new_rank, old_file, new_file, piece]
     """
     old_rank = move_info[0]
@@ -116,26 +107,21 @@ def rook_move(game_board, *move_info):
     if not bool(old_rank - new_rank) ^ bool(old_file - new_file):
         return False
 
-    if new_rank > old_rank:
-        ranks = list(range(old_rank + 1, new_rank))
-    else:
-        ranks = list(range(old_rank - 1, new_rank, -1))
-    if new_file > old_file:
-        files = list(range(old_file + 1, new_file))
-    else:
-        files = list(range(old_file - 1, new_file, -1))
+    min_rank, max_rank = min(old_rank, new_rank), max(old_rank, new_rank)
+    min_file, max_file = min(old_file, new_file), max(old_file, new_file)
 
-    if ranks:
-        for i in range(len(ranks)):
-            piece_between = game_board[ranks[i]][old_file]
-            if piece_between:
-                return False
+    ranks = list(range(min_rank + 1, max_rank))
+    files = list(range(min_file + 1, max_file))
 
-    if files:
-        for i in range(len(files)):
-            piece_between = game_board[old_rank][files[i]]
-            if piece_between:
-                return False
+    for i in range(len(ranks)):
+        piece_between = game_board[ranks[i]][old_file]
+        if piece_between:
+            return False
+
+    for i in range(len(files)):
+        piece_between = game_board[old_rank][files[i]]
+        if piece_between:
+            return False
 
     return True
 
