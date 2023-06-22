@@ -213,7 +213,6 @@ def is_king_checked(pieces, game_board, whites_turn):
             king = piece
             break
     if king is None:
-        # Uhmmmm.... guess theres no king?
         return "what the heck"
 
     for piece in pieces:
@@ -229,7 +228,6 @@ def is_king_checked(pieces, game_board, whites_turn):
                      piece.is_white]
         if is_possible_move(game_board, *move_info):
             return True
-    print("king not checked")
     return False
 
 
