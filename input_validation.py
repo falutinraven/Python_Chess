@@ -50,7 +50,7 @@ def movement(whites_turn, game_board):
 
     piece = game_board[old_rank][old_file]
 
-    if piece == 0:
+    if not piece:
         print("piece doesn't exist. Try again")
         return []
 
@@ -58,7 +58,8 @@ def movement(whites_turn, game_board):
         print("wrong piece. Verify piece is yours")
         return []
 
-    print(turn + "'s turn: Where will your piece move? (e.g. file & rank e3)")
+    print()
+    print("Where will your piece move? (e.g. file & rank e3)")
     move = input()
     if move == "quit":
         quit()
