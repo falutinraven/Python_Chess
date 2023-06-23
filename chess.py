@@ -13,11 +13,6 @@ def main():
         board.print_board(game_board)
 
         if mate.mate(pieces, whites_turn, game_board):
-            # TODO: implement different mates i.e. checkmate/stalemate
-            if whites_turn:
-                print("game over: black wins")
-            if not whites_turn:
-                print("game over: white wins")
             break
 
         move_info = input_validation.movement(whites_turn, game_board)

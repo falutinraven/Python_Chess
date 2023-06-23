@@ -55,8 +55,7 @@ def movement(whites_turn, game_board):
         print("wrong piece. Verify piece is yours")
         return []
 
-    print()
-    print("Where will your piece move? (e.g. file & rank e3)")
+    print("\nWhere will your piece move? (e.g. file & rank e3)")
     move = input()
     if move == "quit":
         quit()
@@ -75,8 +74,7 @@ def movement(whites_turn, game_board):
 
 
 def pawn_promotion():
-    print()
-    print("What will you promote pawn to (n, b, r, q)")
+    print("\nWhat will you promote pawn to (n, b, r, q)")
     promotion = input()
     if promotion == "quit":
         quit()
