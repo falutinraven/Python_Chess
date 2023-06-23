@@ -29,7 +29,6 @@ def main():
         old_file = move_info[2]
         new_file = move_info[3]
 
-        # TODO: put is possible move in attempt move in move_validation module.
         successful_move = move_validation.attempt_move(
             pieces,
             game_board,
@@ -58,7 +57,17 @@ def main():
 
         pieces[piece_index].rank = new_rank
         pieces[piece_index].file = new_file
-        # pieces[i].name = name if promoting pawn
+
+        if piece_to_move.name == 'p':
+            if new_rank == 7 or new_rank == 0:
+                while True:
+                    promotion = input_validation.pawn_promotion()
+                    if not promotion:
+                        print("Type in valid promotion")
+                        continue
+                    pieces[i].name = promotion
+                    game_board[new_rank][new_file].name = promotion
+                    break
 
         whites_turn = not whites_turn
 

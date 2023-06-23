@@ -3,9 +3,6 @@ import piece
 
 
 def pawn_move(game_board, *move_info):
-    """
-       *move_info = [old_rank, new_rank, old_file, new_file, piece]
-    """
     old_rank = move_info[0]
     new_rank = move_info[1]
     old_file = move_info[2]
@@ -15,15 +12,14 @@ def pawn_move(game_board, *move_info):
     capture = game_board[new_rank][new_file]
 
     if (abs(old_file - new_file) > 1
-        or old_rank == new_rank
-        or abs(old_rank - new_rank) > 2):
+            or old_rank == new_rank
+            or abs(old_rank - new_rank) > 2):
         return False
     if is_white and new_rank < old_rank:
         return False
     if not is_white and new_rank > old_rank:
         return False
 
-    # validate double move on pawn's first move
     # TODO: incorporate en passent
     if abs(old_rank - new_rank) == 2:
         if old_file != new_file:
@@ -40,7 +36,6 @@ def pawn_move(game_board, *move_info):
                 return not game_board[old_rank-1][new_file] and not capture
 
     if old_file == new_file:
-        # TODO: check if it reaches the last square and do promotion logic
         return not capture
     else:
         if not capture:
@@ -50,9 +45,6 @@ def pawn_move(game_board, *move_info):
 
 
 def knight_move(*move_info):
-    """
-       *move_info = [old_rank, new_rank, old_file, new_file, piece]
-    """
     old_rank = move_info[0]
     new_rank = move_info[1]
     old_file = move_info[2]
@@ -67,9 +59,6 @@ def knight_move(*move_info):
 
 
 def bishop_move(game_board, *move_info):
-    """
-       *move_info = [old_rank, new_rank, old_file, new_file, piece]
-    """
     old_rank = move_info[0]
     new_rank = move_info[1]
     old_file = move_info[2]
@@ -96,9 +85,6 @@ def bishop_move(game_board, *move_info):
 
 
 def rook_move(game_board, *move_info):
-    """
-       *move_info = [old_rank, new_rank, old_file, new_file, piece]
-    """
     old_rank = move_info[0]
     new_rank = move_info[1]
     old_file = move_info[2]
@@ -127,10 +113,6 @@ def rook_move(game_board, *move_info):
 
 
 def king_move(game_board, *move_info):
-    """
-       *move_info = [old_rank, new_rank, old_file, new_file, piece]
-    """
-
     # TODO: incorporate castling
     if max(abs(move_info[0] - move_info[1]),
            abs(move_info[2] - move_info[3])) > 1:
@@ -157,10 +139,10 @@ def is_possible_move(game_board, *move_info):
     name = move_info[4]
     is_white = move_info[5]
 
-    piece = game_board[old_rank][old_file]
-    if not piece:
+    p = game_board[old_rank][old_file]
+    if not p:
         return False
-    if piece.name != name or piece.is_white is not is_white:
+    if p.name != name or p.is_white is not is_white:
         return False
 
     enemy_piece = game_board[new_rank][new_file]
@@ -186,17 +168,17 @@ def is_possible_move(game_board, *move_info):
 def is_king_checked(pieces, game_board, whites_turn):
     king = pieces[0] if whites_turn else pieces[1]
 
-    for piece in pieces:
-        if not piece:
+    for p in pieces:
+        if not p:
             continue
-        if piece.is_white == whites_turn:
+        if p.is_white == whites_turn:
             continue
-        move_info = [piece.rank,
+        move_info = [p.rank,
                      king.rank,
-                     piece.file,
+                     p.file,
                      king.file,
-                     piece.name,
-                     piece.is_white]
+                     p.name,
+                     p.is_white]
         if is_possible_move(game_board, *move_info):
             return True
     return False
@@ -231,20 +213,23 @@ def attempt_move(pieces, game_board, *move_info):
     game_board[old_rank][old_file] = 0
 
     captured_piece_info = []
-    for piece in pieces:
-        if not piece:
+    for p in pieces:
+        if not p:
             continue
-        if piece.is_white is not whites_turn:
+        if p.is_white is not whites_turn:
             continue
-        if piece.name is not name:
+        if p.name is not name:
             continue
-        if piece.rank == old_rank and piece.file == old_file:
-            piece.rank = new_rank
-            piece.file = new_file
+        if p.rank == old_rank and p.file == old_file:
+            p.rank = new_rank
+            p.file = new_file
             # piece.name = new_name for promotions
-        if piece.rank == new_rank and piece.file == new_file:
-            captured_piece_info = [piece.rank, piece.file, piece.name, piece.is_white]
-            piece = 0
+        if p.rank == new_rank and p.file == new_file:
+            captured_piece_info = [p.rank,
+                                   p.file,
+                                   p.name,
+                                   p.is_white]
+            p = 0
 
     king_checked = False
     if is_king_checked(pieces, game_board, whites_turn):
@@ -253,22 +238,22 @@ def attempt_move(pieces, game_board, *move_info):
     game_board[new_rank][new_file] = piece_to_capture
     game_board[old_rank][old_file] = attacking_piece
 
-    for piece in pieces:
-        if not piece:
+    for p in pieces:
+        if not p:
             if captured_piece_info:
-                piece = piece.Piece(captured_piece_info[2],
-                                    captured_piece_info[3],
-                                    captured_piece_info[0],
-                                    captured_piece_info[1])
+                p = piece.Piece(captured_piece_info[2],
+                                captured_piece_info[3],
+                                captured_piece_info[0],
+                                captured_piece_info[1])
                 captured_piece_info = []
             continue
-        if piece.is_white is not whites_turn:
+        if p.is_white is not whites_turn:
             continue
-        if piece.name is not name:
+        if p.name is not name:
             continue
-        if piece.rank == new_rank and piece.file == new_file:
-            piece.rank = old_rank
-            piece.file = old_file
+        if p.rank == new_rank and p.file == new_file:
+            p.rank = old_rank
+            p.file = old_file
             # piece.name = old_name for promotions
 
     return not king_checked

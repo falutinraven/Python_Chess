@@ -72,3 +72,16 @@ def movement(whites_turn, game_board):
     new_file = file_to_row[move[0]]
 
     return [old_rank, new_rank, old_file, new_file, piece.name, piece.is_white]
+
+
+def pawn_promotion():
+    print()
+    print("What will you promote pawn to (n, b, r, q)")
+    promotion = input()
+    if promotion == "quit":
+        quit()
+    valid_promotions = ['n', 'b', 'r', 'q']
+    for promotions in valid_promotions:
+        if promotions == promotion:
+            return promotion
+    return False

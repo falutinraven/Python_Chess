@@ -59,9 +59,9 @@ def white_pawn_moves(game_board, *move_info):
     old_rank = move_info[0]
     old_file = move_info[2]
 
-    theoretical_moves = [(old_rank+1, old_file), 
+    theoretical_moves = [(old_rank+1, old_file),
                          (old_rank+2, old_file),
-                         (old_rank+1, old_file+1), 
+                         (old_rank+1, old_file+1),
                          (old_rank+1, old_file-1)]
 
     return filter_moves(game_board, theoretical_moves, *move_info)
@@ -77,7 +77,7 @@ def black_pawn_moves(game_board, *move_info):
 
     theoretical_moves = [(old_rank-1, old_file),
                          (old_rank-2, old_file),
-                         (old_rank-1, old_file+1), 
+                         (old_rank-1, old_file+1),
                          (old_rank-1, old_file-1)]
 
     return filter_moves(game_board, theoretical_moves, *move_info)
@@ -166,13 +166,17 @@ def generate_moves(pieces, whites_turn, game_board):
     moves = []
 
     for piece in pieces:
-
-        move_info = [piece.rank, None, piece.file, None, piece.name, piece.is_white]
-
         if not piece:
             continue
         if piece.is_white is not whites_turn:
             continue
+
+        move_info = [piece.rank,
+                     None,
+                     piece.file,
+                     None,
+                     piece.name,
+                     piece.is_white]
 
         if piece.name == 'p' and piece.is_white:
             moves.extend(white_pawn_moves(game_board, *move_info))
@@ -199,4 +203,3 @@ def mate(pieces, whites_turn, game_board):
         if move_validation.attempt_move(pieces, game_board, *move_info):
             return False
     return True
-
