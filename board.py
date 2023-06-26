@@ -82,5 +82,4 @@ def print_board(board):
             else:
                 row[j] = "|   "
         print(''.join(row) + "|")
-    print(horiz_line)
-    print()
+    print(horiz_line + "\n")

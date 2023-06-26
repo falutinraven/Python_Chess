@@ -202,4 +202,9 @@ def mate(pieces, whites_turn, game_board):
     for move_info in all_possible_moves:
         if move_validation.attempt_move(pieces, game_board, *move_info):
             return False
+    if move_validation.is_king_checked(pieces, game_board, whites_turn):
+        victor = "Black" if whites_turn else "White"
+        print("checkmate: " + victor + " wins\n")
+    else:
+        print("stalemate: Draw\n")
     return True
