@@ -14,11 +14,35 @@ def file_and_rank_in_bounds(file, rank):
     return True
 
 
+def piece_input(info):
+    # TODO: DRY
+    usr_inp = info
+
+    if len(usr_inp) != 4:
+        return []
+
+    name = usr_inp[1]
+
+    if usr_inp[0] == 'W':
+        is_white = True
+    elif usr_inp[0] == 'B':
+        is_white = False
+    else:
+        return []
+
+    if name not in valid_pieces:
+        return []
+
+    if not file_and_rank_in_bounds(usr_inp[2], usr_inp[3]):
+        return []
+
+    rank = int(usr_inp[3]) - 1
+    file = file_to_row[usr_inp[2]]
+
+    return [rank, file, name, is_white]
+
+
 def movement(whites_turn, game_board):
-    """
-        returns move_info if valid input. if not, returns an empty list
-        move_info = [old_rank, new_rank, old_file, new_file, piece]
-    """
     turn = "White" if whites_turn else "Black"
 
     print(turn + "'s turn: input letter, file & rank of piece to move")

@@ -1,27 +1,28 @@
 import unittest
 import move_validation as validate
 from collections import namedtuple
+import input_validation as user_input
+import board
 
 file_to_row = {'A': 0, 'a': 0, 'B': 1, 'b': 1, 'C': 2, 'c': 2,
                'D': 3, 'd': 3, 'E': 4, 'e': 4, 'F': 5, 'f': 5,
                'G': 6, 'g': 6, 'H': 7, 'h': 7}
-white = True
-black = False
 Piece = namedtuple('Piece', ['name', 'is_white'])
-file = file_to_row['e']
 
 
 class TestWhitePawn(unittest.TestCase):
     def test_forwards_and_backwards(self):
-        new_board = [[0] * 8 for _ in range(8)]
-        new_board[4][file] = Piece('p', white)
-        move_info = [4, 5, file, file, 'p', white]
+        rank, file, name, is_white = user_input.piece_input("Wpe3")
+        new_board = board.setup([rank, file, name, is_white])
+
+        move_info = [rank, rank+1, file, file, name, is_white]
         forwards_move = validate.is_possible_move(new_board, *move_info)
         self.assertTrue(forwards_move)
 
-        new_board = [[0] * 8 for _ in range(8)]
-        new_board[5][file] = Piece('p', white)
-        move_info = [5, 4, file, file, 'p', white]
+        rank, file, name, is_white = user_input.piece_input("Wpe4")
+        new_board = board.setup([rank, file, name, is_white])
+
+        move_info = [rank, rank-1, file, file, name, is_white]
         backwards_move = validate.is_possible_move(new_board, *move_info)
         self.assertFalse(backwards_move)
 

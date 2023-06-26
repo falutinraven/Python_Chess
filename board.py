@@ -1,9 +1,17 @@
 import piece
 
 
-def setup():
+def setup(*alterations):
+
     pieces = []
     board = [[0] * 8 for _ in range(8)]
+
+    if alterations:
+        for alt in alterations:
+            board[alt[0]][alt[1]] = piece.Piece(alt[2], alt[3])
+            pieces.append(piece.Piece(alt[2], alt[3], alt[0], alt[1]))
+
+        return board
 
     # Kings on Board
     board[0][4] = piece.Piece('k', True)
