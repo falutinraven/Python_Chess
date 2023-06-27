@@ -5,11 +5,11 @@ It is on the terminal for now but it will get a graphical user interface using T
 
 has move validation, input validation, checkmate, and pawn promotions
 
-TODO:
-en passent
-castling
-50 move rule
-draw by repitition
+**TODO:**                                       
+en passent                          
+castling                               
+50 move rule                                       
+draw by repitition                              
 
 ### Beginning the game
 ![begin_chess_game](https://github.com/falutinraven/Python_Chess/assets/135433248/694b442b-7ec8-46ed-9742-43d6776a107f)
