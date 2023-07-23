@@ -72,7 +72,7 @@ def piece_to_str(piece):
 
 def print_board(board):
     print()
-    horiz_line = " --- --- --- --- --- --- --- ---"
+    horiz_line = "   --- --- --- --- --- --- --- ---"
     row = [0] * 8
     for i in range(len(board)-1, -1, -1):
         print(horiz_line)
@@ -81,5 +81,6 @@ def print_board(board):
                 row[j] = "|" + piece_to_str(board[i][j])
             else:
                 row[j] = "|   "
-        print(''.join(row) + "|")
-    print(horiz_line + "\n")
+        print(str(i + 1) + " " +  ''.join(row) + "|")
+    print(horiz_line)
+    print("    A   B   C   D   E   F   G   H" + "\n")
