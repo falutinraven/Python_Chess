@@ -33,7 +33,6 @@ def main():
             print("invalid move, try again")
             continue
 
-        # move piece if successful move
         piece_to_move = deepcopy(game_board[old_rank][old_file])
         game_board[new_rank][new_file] = piece_to_move
         game_board[old_rank][old_file] = 0

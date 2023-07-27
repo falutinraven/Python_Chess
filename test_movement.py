@@ -1,29 +1,31 @@
 import unittest
-import move_validation as validate
+import move_validation
 from collections import namedtuple
-import input_validation as user_input
+import input_validation
 import board
 
 file_to_row = {'A': 0, 'a': 0, 'B': 1, 'b': 1, 'C': 2, 'c': 2,
                'D': 3, 'd': 3, 'E': 4, 'e': 4, 'F': 5, 'f': 5,
                'G': 6, 'g': 6, 'H': 7, 'h': 7}
 Piece = namedtuple('Piece', ['name', 'is_white'])
-
+file = file_to_row['e']
+white = True
+black = False
 
 class TestWhitePawn(unittest.TestCase):
     def test_forwards_and_backwards(self):
-        rank, file, name, is_white = user_input.piece_input("Wpe3")
+        rank, file, name, is_white = input_validation.movement("Wpe3")
         new_board = board.setup([rank, file, name, is_white])
 
         move_info = [rank, rank+1, file, file, name, is_white]
-        forwards_move = validate.is_possible_move(new_board, *move_info)
+        forwards_move = move_validation.is_possible_move(new_board, *move_info)
         self.assertTrue(forwards_move)
 
-        rank, file, name, is_white = user_input.piece_input("Wpe4")
+        rank, file, name, is_white = input_validation.movement("Wpe4")
         new_board = board.setup([rank, file, name, is_white])
 
         move_info = [rank, rank-1, file, file, name, is_white]
-        backwards_move = validate.is_possible_move(new_board, *move_info)
+        backwards_move = move_validation.is_possible_move(new_board, *move_info)
         self.assertFalse(backwards_move)
 
     def test__capture(self):
@@ -33,21 +35,21 @@ class TestWhitePawn(unittest.TestCase):
         new_board = [[0] * 8 for _ in range(8)]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        empty_capture = validate.is_possible_move(new_board, *move_info)
+        empty_capture = move_validation.is_possible_move(new_board, *move_info)
         self.assertFalse(empty_capture)
 
         new_board = [[0] * 8 for _ in range(8)]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
         new_board[5][file] = Piece('p', black)
-        valid_capture = validate.is_possible_move(new_board, *move_info)
+        valid_capture = move_validation.is_possible_move(new_board, *move_info)
         self.assertTrue(valid_capture)
 
         new_board = [[0] * 8 for _ in range(8)]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
         new_board[5][file] = Piece('p', white)
-        invalid_capture = validate.is_possible_move(new_board, *move_info)
+        invalid_capture = move_validation.is_possible_move(new_board, *move_info)
         self.assertFalse(invalid_capture)
 
     def test_two_spaces(self):
@@ -55,14 +57,14 @@ class TestWhitePawn(unittest.TestCase):
         move_info = [1, 3, file, file, 'p', white]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        from_starting_point = validate.is_possible_move(new_board, *move_info)
+        from_starting_point = move_validation.is_possible_move(new_board, *move_info)
         self.assertTrue(from_starting_point)
 
         new_board = [[0] * 8 for _ in range(8)]
         move_info = [2, 4, file, file, 'p', white]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        from_other_row = validate.is_possible_move(new_board, *move_info)
+        from_other_row = move_validation.is_possible_move(new_board, *move_info)
         self.assertFalse(from_other_row)
 
     def test_obstructed(self):
@@ -70,14 +72,14 @@ class TestWhitePawn(unittest.TestCase):
         move_info = [1, 3, file, file, 'p', white]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        not_obstructed = validate.is_possible_move(new_board, *move_info)
+        not_obstructed = move_validation.is_possible_move(new_board, *move_info)
         self.assertTrue(not_obstructed)
 
         new_board = [[0] * 8 for _ in range(8)]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
         new_board[2][file] = Piece('p', black)
-        obstructed = validate.is_possible_move(new_board, *move_info)
+        obstructed = move_validation.is_possible_move(new_board, *move_info)
         self.assertFalse(obstructed)
 
 
@@ -87,14 +89,14 @@ class TestBlackPawn(unittest.TestCase):
         move_info = [5, 4, file, file, 'p', black]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        forwards_move = validate.is_possible_move(new_board, *move_info)
+        forwards_move = move_validation.is_possible_move(new_board, *move_info)
         self.assertTrue(forwards_move)
 
         new_board = [[0] * 8 for _ in range(8)]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
         move_info = [4, 5, file, file, 'p', black]
-        backwards_move = validate.is_possible_move(new_board, *move_info)
+        backwards_move = move_validation.is_possible_move(new_board, *move_info)
         self.assertFalse(backwards_move)
 
     def test_capture(self):
@@ -102,15 +104,15 @@ class TestBlackPawn(unittest.TestCase):
         move_info = [7, 6, file-1, file, 'p', black]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        empty_capture = validate.is_possible_move(new_board, *move_info)
+        empty_capture = move_validation.is_possible_move(new_board, *move_info)
         self.assertFalse(empty_capture)
 
         new_board[6][file] = Piece('p', white)
-        valid_capture = validate.is_possible_move(new_board, *move_info)
+        valid_capture = move_validation.is_possible_move(new_board, *move_info)
         self.assertTrue(valid_capture)
 
         new_board[6][file] = Piece('p', black)
-        invalid_capture = validate.is_possible_move(new_board, *move_info)
+        invalid_capture = move_validation.is_possible_move(new_board, *move_info)
         self.assertFalse(invalid_capture)
 
     def test_two_spaces(self):
@@ -118,13 +120,13 @@ class TestBlackPawn(unittest.TestCase):
         move_info = [6, 4, file, file, 'p', black]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        from_starting_point = validate.is_possible_move(new_board, *move_info)
+        from_starting_point = move_validation.is_possible_move(new_board, *move_info)
         self.assertTrue(from_starting_point)
 
         move_info = [5, 3, file, file, 'p', black]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        from_other_row = validate.is_possible_move(new_board, *move_info)
+        from_other_row = move_validation.is_possible_move(new_board, *move_info)
         self.assertFalse(from_other_row)
 
     def test_obstructed(self):
@@ -132,9 +134,9 @@ class TestBlackPawn(unittest.TestCase):
         move_info = [6, 4, file, file, 'p', black]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        unobstructed = validate.is_possible_move(new_board, *move_info)
+        unobstructed = move_validation.is_possible_move(new_board, *move_info)
         new_board[4][file] = Piece('p', False)
-        obstructed = validate.is_possible_move(new_board, *move_info)
+        obstructed = move_validation.is_possible_move(new_board, *move_info)
         self.assertFalse(obstructed)
         self.assertTrue(unobstructed)
 
@@ -145,24 +147,24 @@ class TestBishop(unittest.TestCase):
         move_info = [4, 5, file, file+1, 'b', white]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        north_east = validate.is_possible_move(new_board, *move_info)
+        north_east = move_validation.is_possible_move(new_board, *move_info)
 
         move_info[0] = 5
         move_info[1] = 4
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        south_east = validate.is_possible_move(new_board, *move_info)
+        south_east = move_validation.is_possible_move(new_board, *move_info)
 
         move_info[3] = file - 1
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        south_west = validate.is_possible_move(new_board, *move_info)
+        south_west = move_validation.is_possible_move(new_board, *move_info)
 
         move_info[0] = 4
         move_info[1] = 5
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        north_west = validate.is_possible_move(new_board, *move_info)
+        north_west = move_validation.is_possible_move(new_board, *move_info)
 
         self.assertTrue(north_east)
         self.assertTrue(south_east)
@@ -176,11 +178,11 @@ class TestBishop(unittest.TestCase):
                                                       move_info[5])
 
         new_board[5][file] = Piece('p', black)
-        valid_capture = validate.is_possible_move(new_board, *move_info)
+        valid_capture = move_validation.is_possible_move(new_board, *move_info)
         self.assertTrue(valid_capture)
 
         new_board[5][file] = Piece('p', white)
-        invalid_capture = validate.is_possible_move(new_board, *move_info)
+        invalid_capture = move_validation.is_possible_move(new_board, *move_info)
         self.assertFalse(invalid_capture)
 
     def test_obstructed(self):
@@ -188,11 +190,11 @@ class TestBishop(unittest.TestCase):
         move_info = [2, 6, file-4, file, 'b', white]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        not_obstructed = validate.is_possible_move(new_board, *move_info)
+        not_obstructed = move_validation.is_possible_move(new_board, *move_info)
         self.assertTrue(not_obstructed)
 
         new_board[3][file-3] = Piece('p', black)
-        obstructed = validate.is_possible_move(new_board, *move_info)
+        obstructed = move_validation.is_possible_move(new_board, *move_info)
         self.assertFalse(obstructed)
 
 
@@ -202,26 +204,26 @@ class TestRook(unittest.TestCase):
         move_info = [2, 5, file, file, 'r', white]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        north = validate.is_possible_move(new_board, *move_info)
+        north = move_validation.is_possible_move(new_board, *move_info)
 
         move_info[0] = 6
         move_info[1] = 4
         new_board = [[0] * 8 for _ in range(8)]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        south = validate.is_possible_move(new_board, *move_info)
+        south = move_validation.is_possible_move(new_board, *move_info)
 
         move_info = [4, 4, file_to_row['a'], file, 'r', white]
         new_board = [[0] * 8 for _ in range(8)]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        east = validate.is_possible_move(new_board, *move_info)
+        east = move_validation.is_possible_move(new_board, *move_info)
 
         move_info[2], move_info[3] = move_info[3], move_info[2]
         new_board = [[0] * 8 for _ in range(8)]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        west = validate.is_possible_move(new_board, *move_info)
+        west = move_validation.is_possible_move(new_board, *move_info)
 
         self.assertTrue(north)
         self.assertTrue(south)
@@ -234,10 +236,10 @@ class TestRook(unittest.TestCase):
         new_board[5][file] = Piece('p', black)
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        valid_capture = validate.is_possible_move(new_board, *move_info)
+        valid_capture = move_validation.is_possible_move(new_board, *move_info)
 
         new_board[5][file] = Piece('p', white)
-        invalid_capture = validate.is_possible_move(new_board, *move_info)
+        invalid_capture = move_validation.is_possible_move(new_board, *move_info)
 
         self.assertTrue(valid_capture)
         self.assertFalse(invalid_capture)
@@ -247,10 +249,10 @@ class TestRook(unittest.TestCase):
         move_info = [1, 6, file, file, 'r', white]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        not_obstructed = validate.is_possible_move(new_board, *move_info)
+        not_obstructed = move_validation.is_possible_move(new_board, *move_info)
 
         new_board[3][file] = Piece('p', black)
-        obstructed = validate.is_possible_move(new_board, *move_info)
+        obstructed = move_validation.is_possible_move(new_board, *move_info)
 
         self.assertTrue(not_obstructed)
         self.assertFalse(obstructed)
@@ -262,12 +264,12 @@ class TestKnight(unittest.TestCase):
         move_info = [4, 6, file, file-1, 'n', white]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        move = validate.is_possible_move(new_board, *move_info)
+        move = move_validation.is_possible_move(new_board, *move_info)
 
         move_info = [4, 7, file, file-1, 'n', white]
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
-        bad_move = validate.is_possible_move(new_board, *move_info)
+        bad_move = move_validation.is_possible_move(new_board, *move_info)
         self.assertTrue(move)
         self.assertFalse(bad_move)
 
@@ -277,10 +279,10 @@ class TestKnight(unittest.TestCase):
         new_board[move_info[0]][move_info[2]] = Piece(move_info[4],
                                                       move_info[5])
         new_board[6][file-1] = Piece('p', black)
-        valid_capture = validate.is_possible_move(new_board, *move_info)
+        valid_capture = move_validation.is_possible_move(new_board, *move_info)
 
         new_board[6][file-1] = Piece('p', white)
-        invalid_capture = validate.is_possible_move(new_board, *move_info)
+        invalid_capture = move_validation.is_possible_move(new_board, *move_info)
 
         self.assertTrue(valid_capture)
         self.assertFalse(invalid_capture)

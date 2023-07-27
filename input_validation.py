@@ -14,57 +14,56 @@ def file_and_rank_in_bounds(file, rank):
     return True
 
 
-def piece_input(info):
-    # TODO: DRY
-    usr_inp = info
+def movement(*info):
+    # info is only a move if it is in test_movement,
+    # else it is the board and whites turn to use in main game
+    if len(info) == 1:
+        color = info[0][0]
+        name = info[0][1]
+        file = info[0][2]
+        rank = info[0][3]
 
-    if len(usr_inp) != 4:
-        return []
+        if color == 'W':
+            is_white = True
+        elif color == 'B':
+            is_white = False
+        else:
+            return []
 
-    name = usr_inp[1]
-
-    if usr_inp[0] == 'W':
-        is_white = True
-    elif usr_inp[0] == 'B':
-        is_white = False
     else:
-        return []
+        whites_turn = info[0]
+        game_board = info[1]
 
-    if name not in valid_pieces:
-        return []
+        turn = "White" if whites_turn else "Black"
 
-    if not file_and_rank_in_bounds(usr_inp[2], usr_inp[3]):
-        return []
+        print(turn + "'s turn: input letter, file & rank of piece to move")
+        print("pieces: (p, n, b, r, q, k), file: A/a-H/h, rank: 1-8")
 
-    rank = int(usr_inp[3]) - 1
-    file = file_to_row[usr_inp[2]]
+        usr_inp = input()
 
-    return [rank, file, name, is_white]
+        if usr_inp == "quit":
+            quit()
 
+        if len(usr_inp) != 3:
+            print("input too long/short. 'pe2' for pawn on file E and rank 2")
+            return []
 
-def movement(whites_turn, game_board):
-    turn = "White" if whites_turn else "Black"
-
-    print(turn + "'s turn: input letter, file & rank of piece to move")
-    print("pieces: (p, n, b, r, q, k), file: A/a-H/h, rank: 1-8")
-
-    usr_inp = input()
-
-    if usr_inp == "quit":
-        quit()
-
-    if len(usr_inp) != 3:
-        print("input too long/short. 'pe2' for pawn on file E and rank 2")
-        return []
-
-    name = usr_inp[0]
+        name = usr_inp[0]
+        rank = usr_inp[2]
+        file = usr_inp[1]
 
     if name not in valid_pieces:
         print("invalid piece name (hint: has to be lowercase)")
         return []
 
-    if not file_and_rank_in_bounds(usr_inp[1], usr_inp[2]):
+    if not file_and_rank_in_bounds(file, rank):
         return []
+
+    if len(info) == 1:
+        rank = int(rank) - 1
+        file = file_to_row[file]
+
+        return [rank, file, name, is_white]
 
     old_rank = int(usr_inp[2]) - 1
     old_file = file_to_row[usr_inp[1]]
