@@ -14,17 +14,14 @@ black = False
 
 class TestWhitePawn(unittest.TestCase):
     def test_forwards_and_backwards(self):
-        rank, file, name, is_white = input_validation.movement("Wpe3")
-        new_board = board.setup([rank, file, name, is_white])
-
-        move_info = [rank, rank+1, file, file, name, is_white]
+        new_board = board.setup('Wpe3')
+        # todo remove magic numbers
+        move_info = [2, 3, file, file, 'p', white]
         forwards_move = move_validation.is_possible_move(new_board, *move_info)
         self.assertTrue(forwards_move)
 
-        rank, file, name, is_white = input_validation.movement("Wpe4")
-        new_board = board.setup([rank, file, name, is_white])
-
-        move_info = [rank, rank-1, file, file, name, is_white]
+        new_board = board.setup('Wpe4')
+        move_info = [3, 2, file, file, 'p', white]
         backwards_move = move_validation.is_possible_move(new_board, *move_info)
         self.assertFalse(backwards_move)
 

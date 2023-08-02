@@ -1,4 +1,5 @@
 import piece
+import input_validation
 
 
 def setup(*alterations):
@@ -7,7 +8,8 @@ def setup(*alterations):
     board = [[0] * 8 for _ in range(8)]
 
     if alterations:
-        for alt in alterations:
+        for individual in alterations:
+            alt = input_validation.movement(individual)
             board[alt[0]][alt[1]] = piece.Piece(alt[2], alt[3])
             pieces.append(piece.Piece(alt[2], alt[3], alt[0], alt[1]))
 
